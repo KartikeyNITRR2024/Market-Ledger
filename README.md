@@ -485,9 +485,8 @@ Task <uuid> COMPLETED: <rows> rows, <errors> errors, <ms> ms, <rows/sec> rows/se
 
 | Run | File size | Rows | Batch size | Reader / DB threads | Duration | Rows/sec | Errors |
 |---|---|---|---|---|---|---|---|
-| 1 | _MB_ | _ | 5,000 | 4 / 4 | _s_ | _ | _ |
-| 2 | _MB_ | _ | 5,000 | 4 / 8 | _s_ | _ | _ |
-| 3 | _MB_ | _ | 2,000 | 4 / 4 | _s_ | _ | _ |
+| 1 | _MB_ | 1000000 | 5,000 | 4 / 4 | 5 min 12 sec | 3205 | 13128 |
+| 2 | _MB_ | 10000 | 5,000 | 4 / 8 | 3 sec | 3310 | 20 |
 
 Record alongside the table: machine (CPU/RAM), PostgreSQL location (local container vs managed cloud: network latency strongly affects batch throughput), and whether the table was empty or being upserted over existing rows.
 
