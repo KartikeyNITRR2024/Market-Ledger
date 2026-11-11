@@ -67,8 +67,8 @@ complete-data-ingestion-platform/
 ### Run everything with one command
 
 ```bash
-git clone <your-repo-url>
-cd complete-data-ingestion-platform
+git clone https://github.com/KartikeyNITRR2024/Market-Ledger
+cd Market-Ledger
 
 # 1. Review / edit the environment file (see section 4)
 cp .env   # optional: keep a private copy
