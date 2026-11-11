@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #12213a;
+  --color-ink-2: #1c3050;
+  --color-paper: #f2f4f7;
+  --color-line: #dde2ea;
+  --color-brass: #b7791f;
+  --color-gain: #0f8a5f;
+  --color-loss: #c2410c;
+}
+
+body { @apply bg-paper text-ink font-sans antialiased; font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 2px solid var(--color-brass); outline-offset: 2px; }
+
+@layer components {
+  .input { @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm placeholder:text-slate-400; }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary { @apply bg-ink text-white hover:bg-ink-2; }
+  .btn-ghost { @apply border border-line bg-white hover:bg-slate-50; }
+  .btn-danger { @apply border border-red-200 bg-white text-red-700 hover:bg-red-50; }
+
+  .panel { @apply rounded-lg border border-line bg-white; }
+  .label { @apply mb-1 block text-xs font-medium text-slate-600; }
+}

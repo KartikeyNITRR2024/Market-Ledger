@@ -1,0 +1,51 @@
+# ---------- Secrets / environment ----------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---------- Backend (Spring Boot / Maven) ----------
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.log
+logs/
+
+# Local H2 database and uploaded CSV files
+data/
+uploads/
+*.mv.db
+*.trace.db
+
+# ---------- Frontend (React / Vite) ----------
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---------- IDEs ----------
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Large datasets ----------
+*.csv

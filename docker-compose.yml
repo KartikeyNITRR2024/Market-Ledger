@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pipeline_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ingestion_db
+      POSTGRES_USER: pipeline_user
+      POSTGRES_PASSWORD: pipeline_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pipeline_user -d ingestion_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: pipeline_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./data-ingestion-platform
+      dockerfile: Dockerfile
+    container_name: pipeline_backend
+    restart: unless-stopped
+    environment:
+      SERVER_PORT: 1997
+      # Internal Docker DNS: service name 'postgres' on port 5432
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/ingestion_db?reWriteBatchedInserts=true}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-pipeline_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-pipeline_password}
+      # Internal Docker DNS: service name 'redis' on port 6379
+      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST:-redis}
+      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT:-6379}
+      JWT_SECRET: ${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      FIRST_ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@gmail.com}
+      FIRST_ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@12345}
+    volumes:
+      - backend_uploads:/data
+    ports:
+      - "1997:1997"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./stock-ui
+      dockerfile: Dockerfile
+    container_name: pipeline_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend_uploads:
+  postgres_data:
+  redis_data:
